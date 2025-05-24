@@ -2,78 +2,211 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>明細書・図面のアップロード</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Helvetica Neue', sans-serif;
-            background: linear-gradient(to right, #ffffff, #e0e0e0, #cccccc, #e0e0e0, #ffffff);
-            color: #111;
-            text-align: center;
-            padding: 40px 20px;
-        }
-        h1 {
-            font-size: 1.8em;
-            margin-bottom: 30px;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        label {
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        input[type="file"],
-        input[type="text"],
-        input[type="date"] {
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            width: 100%;
-            font-size: 1em;
-        }
-        button {
-            background: linear-gradient(to bottom, #f5d76e, #cfae2e);
-            color: #1b1b1b;
-            font-weight: bold;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1em;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease, box-shadow 0.3s ease;
-            margin-top: 10px;
-        }
-        button:hover {
-            transform: scale(1.07);
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>明細書AIチェック</title>
+  <script src="uploadscript.js" defer></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: linear-gradient(to right, #bbb, #333);
+      color: white;
+      padding: 2rem;
+    }
+    form {
+      background: #222;
+      padding: 2rem;
+      border-radius: 8px;
+      display: inline-block;
+      width: 90%;
+      max-width: 600px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 1rem;
+      display: block;
+      text-align: left;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      background-color: #2196f3;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 0.75rem;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      margin-top: 2rem;
+    }
+    .drop-zone {
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      background-color: #333;
+      cursor: pointer;
+      position: relative;
+    }
+    .drop-zone input[type="file"] {
+      display: none;
+    }
+    .file-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .file-label {
+      font-weight: bold;
+    }
+    .remove-btn {
+      color: red;
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+    .notice {
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      color: #ddd;
+      text-align: left;
+    }
+    #result {
+      white-space: pre-wrap;
+      margin-top: 30px;
+      background: white;
+      color: black;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: left;
+    }
+    #result:empty::before {
+      content: "（ここにチェック結果が表示されます）";
+      color: #888;
+      font-size: 0.85rem;
+    }
+    .loading-dots::after {
+      content: '';
+      display: inline-block;
+      animation: dotloop 2s steps(10, end) infinite;
+      white-space: nowrap;
+      overflow: hidden;
+      vertical-align: bottom;
+      font-weight: bold;
+    }
+    @keyframes dotloop {
+      0% { content: ''; }
+      10% { content: '.'; }
+      20% { content: '..'; }
+      30% { content: '...'; }
+      40% { content: '....'; }
+      50% { content: '.....'; }
+      60% { content: '......'; }
+      70% { content: '.......'; }
+      80% { content: '........'; }
+      90% { content: '.........'; }
+      100% { content: '..........'; }
+    }
+  </style>
 </head>
 <body>
-    <h1>明細書・図面のアップロード</h1>
-    <form id="uploadForm">
-        <label for="meisaisho_file">明細書（.docx）：</label>
-        <input type="file" id="meisaisho_file" name="meisaisho_file" required>
+  <h1>明細書・特許請求の範囲・要約書AIチェック</h1>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <label for="shoin_id">所員IDまたは氏名（必須）</label>
+    <input type="text" name="shoin_id" id="shoin_id" required />
 
-        <label for="zumen_file">図面（PDF）：</label>
-        <input type="file" id="zumen_file" name="zumen_file">
+    <label for="today-date">日付（自動）</label>
+    <input type="text" name="date" id="today-date" readonly />
 
-        <label for="shoin_id">社員ID:</label>
-        <input type="text" id="shoin_id" name="shoin_id" required>
+    <label for="seiri_no">整理番号（必須）</label>
+    <input type="text" name="seiri_no" id="seiri_no" required />
 
-        <label for="date">チェック日付:</label>
-        <input type="date" id="date" name="date">
+    <label for="meisai_file">明細書（必須）</label>
+    <div class="drop-zone" id="docxZone">
+      <span class="placeholder">明細書ファイル（.docx）を<br>ここにドラッグ＆ドロップ またはクリックして選択</span>
+      <input type="file" name="meisai" id="meisai_file" accept=".docx" required />
+      <div class="file-display" id="docx-display" style="display: none;">
+        <span class="file-label" id="docx-name"></span>
+        <span class="remove-btn" id="remove-docx">🗑</span>
+      </div>
+    </div>
+    <div class="notice">明細書は .docx 形式でご提出ください。</div>
 
-        <button type="submit">チェックを開始</button>
-    </form>
+    <label for="zumen_file">図面（任意）</label>
+    <div class="drop-zone" id="pdfZone">
+      <span class="placeholder">図面ファイル（PDF, 任意）を<br>ここにドラッグ＆ドロップ またはクリックして選択</span>
+      <input type="file" name="zumen" id="zumen_file" accept=".pdf" />
+      <div class="file-display" id="pdf-display" style="display: none;">
+        <span class="file-label" id="pdf-name"></span>
+        <span class="remove-btn" id="remove-pdf">🗑</span>
+      </div>
+    </div>
+    <div class="notice">
+      図面は PDF 形式（OCR化推奨）をご提出ください。特に、ブロック図やフローチャート等の文字が含まれている場合は、OCR化したものでお願いします。
+    </div>
+
+    <button type="submit">AIチェックを開始</button>
+  </form>
+
+  <script>
+    document.getElementById("today-date").value = new Date().toISOString().split('T')[0];
+
+    function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
+      const zone = document.getElementById(zoneId);
+      const input = document.getElementById(inputId);
+      const name = document.getElementById(nameId);
+      const remove = document.getElementById(removeId);
+      const display = document.getElementById(displayId);
+      const placeholder = zone.querySelector('.placeholder');
+
+      function updateDisplay() {
+        if (input.files.length > 0) {
+          name.textContent = input.files[0].name;
+          display.style.display = 'flex';
+          placeholder.style.display = 'none';
+        } else {
+          display.style.display = 'none';
+          placeholder.style.display = 'block';
+        }
+      }
+
+      zone.addEventListener('click', () => input.click());
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.style.backgroundColor = '#444';
+      });
+      zone.addEventListener('dragleave', () => {
+        zone.style.backgroundColor = '#333';
+      });
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.style.backgroundColor = '#333';
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          const dt = new DataTransfer();
+          dt.items.add(files[0]);
+          input.files = dt.files;
+        }
+        updateDisplay();
+      });
+
+      input.addEventListener('change', updateDisplay);
+      remove.addEventListener('click', () => {
+        input.value = '';
+        updateDisplay();
+      });
+    }
+
+    setupDropZone('docxZone', 'meisai_file', 'docx-name', 'remove-docx', 'docx-display');
+    setupDropZone('pdfZone', 'zumen_file', 'pdf-name', 'remove-pdf', 'pdf-display');
+  </script>
 </body>
 </html>

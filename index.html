@@ -9,19 +9,19 @@
         body {
             margin: 0;
             font-family: 'Helvetica Neue', sans-serif;
-            background: linear-gradient(to bottom, #2c3e50, #2c3e50);
+            background: radial-gradient(circle at center, #3e4c59 0%, #2c3e50 100%);
             color: white;
             text-align: center;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            align-items: center;
             min-height: 100vh;
             padding: 20px;
         }
         header {
             font-size: 2em;
             font-weight: bold;
-            margin-bottom: 40px;
+            margin: 20px 0 40px;
         }
         .logo {
             font-size: 1.2em;
@@ -31,11 +31,11 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            width: 90%;
             max-width: 400px;
-            margin: 0 auto;
+            margin-bottom: 50px;
         }
         a.button {
-            display: block;
             background-color: #3498db;
             color: white;
             padding: 15px;
@@ -52,8 +52,21 @@
             font-size: 0.8em;
             opacity: 0.6;
         }
+        .info-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 700px;
+            text-align: left;
+            font-size: 0.95em;
+            line-height: 1.8;
+        }
+        .info-box a {
+            color: #ffcc00;
+            text-decoration: underline;
+        }
 
-        /* スマホ対応 */
+        /* Responsive */
         @media (max-width: 600px) {
             header {
                 font-size: 1.5em;
@@ -61,6 +74,10 @@
             a.button {
                 font-size: 0.9em;
                 padding: 12px;
+            }
+            .info-box {
+                font-size: 0.85em;
+                padding: 20px;
             }
         }
     </style>
@@ -71,6 +88,22 @@
     <div class="button-container">
         <a class="button" href="/upload.html">明細書・特許請求の範囲・要約書チェック</a>
         <a class="button" href="/admin.html">管理者用ページ</a>
+    </div>
+    <div class="info-box">
+        <strong>📌 他のAI支援ツールのご案内</strong><br><br>
+        上記チェックツール以外にも、特許業務の効率化および品質向上を支援する「対話型AI支援ツール」をご提供しています。<br><br>
+        【対応可能な支援内容】<br>
+        ・明細書・特許請求の範囲作成支援<br>
+        ・日本拒絶理由通知の分析支援<br>
+        ・日本拒絶理由通知への応答支援<br>
+        ・米国オフィスアクション解析支援<br>
+        ・新規英文レター作成支援<br>
+        ・返信英文レター作成支援<br>
+        ・自作英文レターのチェック・改善支援<br>
+        （その他：事務所様ごとのカスタム対応可）<br><br>
+        これらのツールは、PCにインストールして動作します。<br>
+        ご興味のある方は、👇<br>
+        👉 <a href="https://example.com" target="_blank">こちらより詳細をご覧ください。</a>
     </div>
     <footer>&copy; 2025 特許事務AIチーム</footer>
 </body>

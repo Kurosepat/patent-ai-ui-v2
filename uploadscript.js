@@ -20,7 +20,14 @@ window.addEventListener('DOMContentLoaded', () => {
     formData.append('date', new Date().toISOString().slice(0, 10));
 
     try {
-      const response = await fetch('https://hook.us2.make.com/7ya79qm3ttvxoq6taks4wvto37hrcfjb', {
+      // 分析中メッセージ表示
+      const resultBox = document.getElementById("result-box");
+      if (resultBox) {
+        resultBox.innerHTML = "<span class='loading'>暫くお待ちください。<br>現在、AI分析中です<span id='dots'></span></span>";
+        animateDots();
+      }
+
+      const response = await fetch('https://hook.us2.make.com/xxxxxxxxxxxxxxxxxxxx', {
         method: 'POST',
         body: formData
       });
@@ -28,8 +35,8 @@ window.addEventListener('DOMContentLoaded', () => {
       const resultText = await response.text();
 
       if (response.ok) {
-        // ✅ Render 環境内の相対パスへ遷移
-        window.location.href = "result.html?result=" + encodeURIComponent(resultText);
+        // 完了したら result.html に遷移
+        window.location.href = "/result.html?result=" + encodeURIComponent(resultText);
       } else {
         alert('❌ エラーが発生しました（Make側）:\n' + resultText);
       }
@@ -38,4 +45,14 @@ window.addEventListener('DOMContentLoaded', () => {
       alert('⚠️ ネットワークエラーが発生しました。再度お試しください。');
     }
   });
+
+  function animateDots() {
+    const dots = document.getElementById("dots");
+    if (!dots) return;
+    let count = 0;
+    setInterval(() => {
+      count = (count + 1) % 21;
+      dots.textContent = ".".repeat(count);
+    }, 300);
+  }
 });

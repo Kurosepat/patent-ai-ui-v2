@@ -28,7 +28,8 @@ window.addEventListener('DOMContentLoaded', () => {
       const resultText = await response.text();
 
       if (response.ok) {
-        window.location.href = "https://kurosepat.github.io/spec-check-ver4/result.html?result=" + encodeURIComponent(resultText);
+        // ✅ Render 環境内の相対パスへ遷移
+        window.location.href = "result.html?result=" + encodeURIComponent(resultText);
       } else {
         alert('❌ エラーが発生しました（Make側）:\n' + resultText);
       }

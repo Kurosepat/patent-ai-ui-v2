@@ -2,7 +2,8 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>チェック結果</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>特許事務専用AIツール</title>
   <style>
     body {
       margin: 0;
@@ -10,55 +11,101 @@
       background: linear-gradient(to right, #ffffff, #e0e0e0, #cccccc, #e0e0e0, #ffffff);
       color: #111;
       text-align: center;
-      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
     }
-    h1 {
-      font-size: 2.2em;
-      margin-bottom: 40px;
+    header {
+      font-size: 2em;
+      font-weight: bold;
+      margin: 20px 0 40px;
     }
-    #result-box {
-      background-color: rgba(0, 0, 0, 0.05);
-      border-radius: 10px;
-      padding: 30px;
-      max-width: 800px;
-      margin: 0 auto;
-      text-align: center;
+    .logo {
       font-size: 1.2em;
+      margin-bottom: 10px;
     }
-    #check-result {
-      margin-top: 20px;
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 90%;
+      max-width: 400px;
+      margin-bottom: 50px;
+    }
+    a.button {
+      background: linear-gradient(to bottom, #f5d76e, #cfae2e);
+      color: #1b1b1b;
+      padding: 15px;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 1em;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transform: scale(1);
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    a.button:hover {
+      transform: scale(1.07);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+    footer {
+      margin-top: 50px;
+      font-size: 0.8em;
+      opacity: 0.6;
+    }
+    .info-box {
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 700px;
       text-align: left;
-      white-space: pre-wrap;
+      font-size: 0.95em;
+      line-height: 1.8;
+    }
+    .info-box a {
+      color: #d48806;
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      header {
+        font-size: 1.5em;
+      }
+      a.button {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      .info-box {
+        font-size: 0.85em;
+        padding: 20px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>チェック結果</h1>
-  <div id="result-box">
-    <div id="status-text">暫くお待ちください。<br>現在、AI分析中です<span id="dots">.</span></div>
-    <div id="check-result" style="display: none;"></div>
+  <div class="logo">YOUR COMPANY LOGO</div>
+  <header>特許事務専用AIツール</header>
+  <div class="button-container">
+    <a class="button" href="/upload.html">明細書・特許請求の範囲・要約書チェック</a>
+    <a class="button" href="/admin.html">管理者用ページ</a>
   </div>
-
-  <script>
-    // ドットアニメーション
-    const dotsElement = document.getElementById('dots');
-    let dotCount = 1;
-    const intervalId = setInterval(() => {
-      dotCount = (dotCount % 20) + 1;
-      dotsElement.textContent = '.'.repeat(dotCount);
-    }, 200);
-
-    // クエリ文字列からresultパラメータを取得して表示
-    const urlParams = new URLSearchParams(window.location.search);
-    const result = urlParams.get('result');
-
-    if (result) {
-      clearInterval(intervalId); // ドットアニメーション停止
-      document.getElementById('status-text').innerText = "チェックが完了しました。詳細は以下のとおりです。";
-      const resultDiv = document.getElementById('check-result');
-      resultDiv.style.display = 'block';
-      resultDiv.textContent = decodeURIComponent(result.replace(/\+/g, ' '));
-    }
-  </script>
+  <div class="info-box">
+    <strong>📌 他のAI支援ツールのご案内</strong><br><br>
+    上記チェックツール以外にも、特許業務の効率化および品質向上を支援する「対話型AI支援ツール」をご提供しています。<br><br>
+    【対応可能な支援内容】<br>
+    ・明細書・特許請求の範囲作成支援<br>
+    ・日本拒絶理由通知の分析支援<br>
+    ・日本拒絶理由通知への応答支援<br>
+    ・米国オフィスアクション解析支援<br>
+    ・新規英文レター作成支援<br>
+    ・返信英文レター作成支援<br>
+    ・自作英文レターのチェック・改善支援<br>
+    （その他：事務所様ごとのカスタム対応可）<br><br>
+    これらのツールは、PCにインストールして動作します。<br>
+    ご興味のある方は、👇<br>
+    👉 <a href="https://example.com" target="_blank">こちらより詳細をご覧ください。</a>
+  </div>
+  <footer>&copy; 2025 特許事務AIチーム</footer>
 </body>
 </html>

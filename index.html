@@ -1,0 +1,87 @@
+from pathlib import Path
+
+# HTMLコード（CSS埋め込み・レスポンシブ対応・仮ロゴ含む・ボタン2つ）
+html_code = """
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特許事務専用AIツール</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Helvetica Neue', sans-serif;
+            background: linear-gradient(to bottom, #2c3e50, #2c3e50);
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        header {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        .logo {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        a.button {
+            display: block;
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        a.button:hover {
+            background-color: #2980b9;
+        }
+        footer {
+            margin-top: 50px;
+            font-size: 0.8em;
+            opacity: 0.6;
+        }
+
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            header {
+                font-size: 1.5em;
+            }
+            a.button {
+                font-size: 0.9em;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">YOUR COMPANY LOGO</div>
+    <header>特許事務専用AIツール</header>
+    <div class="button-container">
+        <a class="button" href="/upload.html">明細書・特許請求の範囲・要約書チェック</a>
+        <a class="button" href="/admin.html">管理者用ページ</a>
+    </div>
+    <footer>&copy; 2025 特許事務AIチーム</footer>
+</body>
+</html>
+"""
+
+# 保存
+output_path = Path("/mnt/data/home.html")
+output_path.write_text(html_code, encoding="utf-8")
+
+output_path.name

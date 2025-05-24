@@ -1,7 +1,4 @@
-from pathlib import Path
 
-# HTMLコード（CSS埋め込み・レスポンシブ対応・仮ロゴ含む・ボタン2つ）
-html_code = """
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -78,10 +75,3 @@ html_code = """
     <footer>&copy; 2025 特許事務AIチーム</footer>
 </body>
 </html>
-"""
-
-# 保存
-output_path = Path("/mnt/data/home.html")
-output_path.write_text(html_code, encoding="utf-8")
-
-output_path.name

@@ -27,7 +27,7 @@ window.addEventListener('DOMContentLoaded', () => {
         animateDots();
       }
 
-      const response = await fetch('https://hook.us2.make.com/xxxxxxxxxxxxxxxxxxxx', {
+      const response = await fetch('https://hook.us2.make.com/7ya79qm3ttvxoq6taks4wvto37hrcfjb', {
         method: 'POST',
         body: formData
       });

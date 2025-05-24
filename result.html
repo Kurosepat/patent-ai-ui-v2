@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>チェック結果</title>
+    <style>
+    body {
+        margin: 0;
+        font-family: 'Helvetica Neue', sans-serif;
+        background: linear-gradient(to right, #ffffff, #e0e0e0, #cccccc, #e0e0e0, #ffffff);
+        color: #111;
+        text-align: center;
+        padding: 40px 20px;
+    }
+    input, button {
+        padding: 12px;
+        margin: 10px;
+        font-size: 1em;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+    button {
+        background: linear-gradient(to bottom, #f5d76e, #cfae2e);
+        color: #1b1b1b;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+    }
+
+        #result-box {
+            background-color: rgba(0,0,0,0.05);
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 800px;
+            margin: 30px auto;
+            text-align: left;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>チェック結果</h1>
+    <div id="result-box">
+        <!-- チェック結果がここに表示されます -->
+        チェック完了しました。以下に詳細を表示します...
+    </div>
+</body>
+</html>

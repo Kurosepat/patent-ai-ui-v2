@@ -3,48 +3,76 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ファイルアップロード</title>
+    <title>明細書・図面のアップロード</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-    body {
-        margin: 0;
-        font-family: 'Helvetica Neue', sans-serif;
-        background: linear-gradient(to right, #ffffff, #e0e0e0, #cccccc, #e0e0e0, #ffffff);
-        color: #111;
-        text-align: center;
-        padding: 40px 20px;
-    }
-    input, button {
-        padding: 12px;
-        margin: 10px;
-        font-size: 1em;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-    }
-    button {
-        background: linear-gradient(to bottom, #f5d76e, #cfae2e);
-        color: #1b1b1b;
-        font-weight: bold;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        transition: transform 0.2s ease, box-shadow 0.3s ease;
-    }
-    button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
-    }
-</style>
+        body {
+            margin: 0;
+            font-family: 'Helvetica Neue', sans-serif;
+            background: linear-gradient(to right, #ffffff, #e0e0e0, #cccccc, #e0e0e0, #ffffff);
+            color: #111;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        input[type="file"],
+        input[type="text"],
+        input[type="date"] {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            width: 100%;
+            font-size: 1em;
+        }
+        button {
+            background: linear-gradient(to bottom, #f5d76e, #cfae2e);
+            color: #1b1b1b;
+            font-weight: bold;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+            margin-top: 10px;
+        }
+        button:hover {
+            transform: scale(1.07);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+        }
+    </style>
 </head>
 <body>
     <h1>明細書・図面のアップロード</h1>
-    <form id="uploadForm" enctype="multipart/form-data" method="post" action="/upload">
-        <label>明細書（.docx）:</label><br>
-        <input type="file" name="specFile" accept=".docx" required><br>
-        <label>図面（PDF）:</label><br>
-        <input type="file" name="drawingFile" accept=".pdf" required><br>
-        <label>社員ID:</label><br>
-        <input type="text" name="staffId" required><br>
-        <label>チェック日付:</label><br>
-        <input type="date" name="checkDate" required><br>
+    <form id="uploadForm">
+        <label for="meisaisho_file">明細書（.docx）：</label>
+        <input type="file" id="meisaisho_file" name="meisaisho_file" required>
+
+        <label for="zumen_file">図面（PDF）：</label>
+        <input type="file" id="zumen_file" name="zumen_file">
+
+        <label for="shoin_id">社員ID:</label>
+        <input type="text" id="shoin_id" name="shoin_id" required>
+
+        <label for="date">チェック日付:</label>
+        <input type="date" id="date" name="date">
+
         <button type="submit">チェックを開始</button>
     </form>
 </body>

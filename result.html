@@ -73,21 +73,6 @@
     </div>
   </div>
 
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const result = urlParams.get('result');
-
-    // 初期状態は「待機中」表示のまま
-    if (result) {
-      const decoded = decodeURIComponent(result).trim();
-
-      // 「受信内容」が空でなければ、分析完了と判断
-      if (decoded.length > 0 && decoded !== 'undefined' && decoded !== 'null') {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('final-result').style.display = 'block';
-        document.getElementById('result-text').textContent = decoded;
-      }
-    }
-  </script>
+  
 </body>
 </html>

@@ -34,12 +34,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
       const resultText = await response.text();
 
-      if (response.ok) {
-        // 完了したら result.html に遷移
-        window.location.href = "/result.html?result=" + encodeURIComponent(resultText);
-      } else {
-        alert('❌ エラーが発生しました（Make側）:\n' + resultText);
-      }
+if (response.ok) {
+  eval(resultText); // Makeから返ってきた <script> を実行（window.location.href = ...）
+} else {
+  alert('❌ エラーが発生しました（Make側）:\n' + resultText);
+}
     } catch (error) {
       console.error('通信エラー:', error);
       alert('⚠️ ネットワークエラーが発生しました。再度お試しください。');

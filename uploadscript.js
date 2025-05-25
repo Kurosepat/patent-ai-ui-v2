@@ -20,10 +20,9 @@ window.addEventListener('DOMContentLoaded', () => {
     formData.append('date', new Date().toISOString().slice(0, 10));
 
     try {
-      // 分析中メッセージ表示
       const resultBox = document.getElementById("result-box");
       if (resultBox) {
-        resultBox.innerHTML = "<span class='loading'>暫くお待ちください。<br>現在、AI分析中です<span id='dots'></span></span>";
+        resultBox.innerHTML = "暫くお待ちください。<br>現在、AI分析中です<span id='dots'></span>";
         animateDots();
       }
 
@@ -33,13 +32,13 @@ window.addEventListener('DOMContentLoaded', () => {
       });
 
       const resultText = await response.text();
+      console.log("eval前の中身:", resultText); // ← 確認ログ
 
-if (response.ok) {
-   console.log("Makeの返答:", resultText); // ← ここ追加
-  eval(resultText); // Makeから返ってきた <script> を実行（window.location.href = ...）
-} else {
-  alert('❌ エラーが発生しました（Make側）:\n' + resultText);
-}
+      if (response.ok) {
+        eval(resultText); // Makeからの <script> を実行
+      } else {
+        alert('❌ エラーが発生しました（Make側）:\n' + resultText);
+      }
     } catch (error) {
       console.error('通信エラー:', error);
       alert('⚠️ ネットワークエラーが発生しました。再度お試しください。');

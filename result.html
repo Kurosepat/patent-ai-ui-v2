@@ -73,6 +73,16 @@
     </div>
   </div>
 
-  
+  <script>
+  const params = new URLSearchParams(window.location.search);
+  const result = params.get("result");
+
+  if (result) {
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("final-result").style.display = "block";
+    document.getElementById("result-text").textContent = decodeURIComponent(result);
+  }
+</script>
+
 </body>
 </html>

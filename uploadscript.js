@@ -35,6 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const resultText = await response.text();
 
 if (response.ok) {
+   console.log("Makeの返答:", resultText); // ← ここ追加
   eval(resultText); // Makeから返ってきた <script> を実行（window.location.href = ...）
 } else {
   alert('❌ エラーが発生しました（Make側）:\n' + resultText);

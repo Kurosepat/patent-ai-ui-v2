@@ -85,7 +85,11 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
     }
   }
 
-  zone.addEventListener('click', () => input.click());
+  zone.addEventListener('click', () => {
+  input.value = '';  // ★ 選択済ファイルをクリア（←これが重要！）
+  input.click();
+});
+
   zone.addEventListener('dragover', (e) => {
     e.preventDefault();
     zone.style.backgroundColor = '#444';

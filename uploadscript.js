@@ -1,4 +1,4 @@
-// ✅ uploadscript.js（submit内でファイルを取得する修正済バージョン）
+// ✅ uploadscript.js（submit内でファイル取得・click前のvalueリセット対応）
 
 window.addEventListener('DOMContentLoaded', function() {
   document.getElementById("today-date").value = new Date().toISOString().split('T')[0];
@@ -15,7 +15,6 @@ window.addEventListener('DOMContentLoaded', function() {
 
     await new Promise(resolve => setTimeout(resolve, 300));  // 少し待ってから実行
 
-    // ✅ 最新状態をsubmitの中で毎回取得
     const meisaiFile = document.getElementById('meisai_file').files[0];
     const zumenFile = document.getElementById('zumen_file').files[0];
     const shoinId = document.getElementById('shoin_id').value.trim();
@@ -85,9 +84,9 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
     }
   }
 
-  // ✅ クリック時は毎回リセットして同じファイルも再選択可能にする
+  // ✅ クリック時に value をリセットして、1回目も同じファイルも確実に拾えるように
   zone.addEventListener('click', () => {
-    input.value = null;
+    input.value = '';  // ← これが効く！
     input.click();
   });
 

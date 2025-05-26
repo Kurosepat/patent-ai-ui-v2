@@ -1,4 +1,4 @@
-// ✅ uploadscript.js（submit内でファイル取得・click前のvalueリセット対応）
+// ✅ uploadscript.js（submit内でファイル取得＋changeイベント確実対応）
 
 window.addEventListener('DOMContentLoaded', function() {
   document.getElementById("today-date").value = new Date().toISOString().split('T')[0];
@@ -13,7 +13,7 @@ window.addEventListener('DOMContentLoaded', function() {
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    await new Promise(resolve => setTimeout(resolve, 300));  // 少し待ってから実行
+    await new Promise(resolve => setTimeout(resolve, 300));
 
     const meisaiFile = document.getElementById('meisai_file').files[0];
     const zumenFile = document.getElementById('zumen_file').files[0];
@@ -67,7 +67,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
   const zone = document.getElementById(zoneId);
-  const input = document.getElementById(inputId);
+  let input = document.getElementById(inputId);
   const name = document.getElementById(nameId);
   const remove = document.getElementById(removeId);
   const display = document.getElementById(displayId);
@@ -84,12 +84,16 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
     }
   }
 
-  // ✅ クリック時に value をリセットして、1回目も同じファイルも確実に拾えるように
+  // ✅ クリック時に input を毎回作り直してイベントを確実に再設定
   zone.addEventListener('click', () => {
-    input.value = '';  // ← これが効く！
+    const newInput = input.cloneNode(true);
+    input.parentNode.replaceChild(newInput, input);
+    input = newInput; // 差し替えた新しい input を参照するようにする
+    input.addEventListener('change', updateDisplay);
     input.click();
   });
 
+  // ✅ ドラッグ＆ドロップ処理
   zone.addEventListener('dragover', (e) => {
     e.preventDefault();
     zone.style.backgroundColor = '#444';
@@ -107,12 +111,17 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
       const dt = new DataTransfer();
       dt.items.add(files[0]);
       input.files = dt.files;
+
+      // ✅ イベントを強制発火（UI更新の保険）
+      input.dispatchEvent(new Event('change'));
     }
     updateDisplay();
   });
 
+  // ✅ 初期のイベント登録
   input.addEventListener('change', updateDisplay);
 
+  // 🗑 削除ボタン
   remove.addEventListener('click', () => {
     input.value = '';
     updateDisplay();

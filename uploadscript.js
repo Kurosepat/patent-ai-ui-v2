@@ -1,4 +1,4 @@
-// ✅ uploadscript.js（クリック修正＆進捗バー対応）
+// ✅ uploadscript.js（submit内でファイルを取得する修正済バージョン）
 
 window.addEventListener('DOMContentLoaded', function() {
   document.getElementById("today-date").value = new Date().toISOString().split('T')[0];
@@ -15,10 +15,11 @@ window.addEventListener('DOMContentLoaded', function() {
 
     await new Promise(resolve => setTimeout(resolve, 300));  // 少し待ってから実行
 
-    const shoinId = document.getElementById('shoin_id').value.trim();
-    const seiriNo = document.getElementById('seiri_no').value.trim();
+    // ✅ 最新状態をsubmitの中で毎回取得
     const meisaiFile = document.getElementById('meisai_file').files[0];
     const zumenFile = document.getElementById('zumen_file').files[0];
+    const shoinId = document.getElementById('shoin_id').value.trim();
+    const seiriNo = document.getElementById('seiri_no').value.trim();
     const date = new Date().toISOString().slice(0, 10);
 
     if (!shoinId || !seiriNo || !meisaiFile) {
@@ -84,8 +85,9 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
     }
   }
 
-  // ✅ ここを修正：cloneNodeはやめて、シンプルにクリック
+  // ✅ クリック時は毎回リセットして同じファイルも再選択可能にする
   zone.addEventListener('click', () => {
+    input.value = null;
     input.click();
   });
 

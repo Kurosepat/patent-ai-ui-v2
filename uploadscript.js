@@ -68,7 +68,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
   const zone = document.getElementById(zoneId);
-  const input = document.getElementById(inputId);
+  getElementById(inputId);
   const name = document.getElementById(nameId);
   const remove = document.getElementById(removeId);
   const display = document.getElementById(displayId);
@@ -86,9 +86,18 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
   }
 
   zone.addEventListener('click', () => {
-  input.value = '';  // ★ 選択済ファイルをクリア（←これが重要！）
-  input.click();
+  // 🔁 inputの完全リセット（cloneNode方式）
+  const oldInput = document.getElementById(inputId);
+  const newInput = oldInput.cloneNode(true);
+  oldInput.parentNode.replaceChild(newInput, oldInput);
+
+  // イベント再設定（再生成したinputに対して）
+  newInput.addEventListener('change', updateDisplay);
+
+  // ファイル選択トリガー
+  newInput.click();
 });
+
 
   zone.addEventListener('dragover', (e) => {
     e.preventDefault();

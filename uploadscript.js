@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', function() {
     e.preventDefault();
 
 // ← ここで一呼吸待ってから実行する
-  await new Promise(resolve => setTimeout(resolve, 100));  // 100ms 待機（回避策）
+  await new Promise(resolve => setTimeout(resolve, 300));  // 100ms 待機（回避策）
     
     const shoinId = document.getElementById('shoin_id').value.trim();
     const seiriNo = document.getElementById('seiri_no').value.trim();

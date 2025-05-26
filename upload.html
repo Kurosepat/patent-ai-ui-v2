@@ -156,6 +156,10 @@
     <button type="button" onclick="startAnalysis()">AIチェックを開始</button>
   </form>
 
+<div id="analysis-status" style="display: none; margin-top: 30px; font-size: 1.2rem;">
+  AI分析中です。しばらくお待ちください<span id="dots"></span>
+</div>
+
   <script>
     document.getElementById("today-date").value = new Date().toISOString().split('T')[0];
 

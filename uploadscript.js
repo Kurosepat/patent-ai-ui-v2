@@ -91,12 +91,13 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
   const newInput = oldInput.cloneNode(true);
   oldInput.parentNode.replaceChild(newInput, oldInput);
 
-  // イベント再設定（再生成したinputに対して）
+  input = newInput;  // ✅ これを忘れずに追加！
   newInput.addEventListener('change', updateDisplay);
 
   // ファイル選択トリガー
   newInput.click();
 });
+
 
 
   zone.addEventListener('dragover', (e) => {

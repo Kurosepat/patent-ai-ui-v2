@@ -1,8 +1,66 @@
-window.addEventListener('DOMContentLoaded', () => {
+// ✅ uploadscript.js（進捗バー対応バージョン）
+
+window.addEventListener('DOMContentLoaded', function() {
   document.getElementById("today-date").value = new Date().toISOString().split('T')[0];
 
   setupDropZone('docxZone', 'meisai_file', 'docx-name', 'remove-docx', 'docx-display');
   setupDropZone('pdfZone', 'zumen_file', 'pdf-name', 'remove-pdf', 'pdf-display');
+
+  const form = document.getElementById('upload-form');
+  const statusDiv = document.getElementById('analysis-status');
+  const progressBar = document.getElementById('progress-bar');
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const shoinId = document.getElementById('shoin_id').value.trim();
+    const seiriNo = document.getElementById('seiri_no').value.trim();
+    const meisaiFile = document.getElementById('meisai_file').files[0];
+    const zumenFile = document.getElementById('zumen_file').files[0];
+    const date = new Date().toISOString().slice(0, 10);
+
+    if (!shoinId || !seiriNo || !meisaiFile) {
+      alert('❗ 必須項目（所員ID・整理番号・明細書ファイル）をすべて入力してください。');
+      return;
+    }
+
+    // ステータス表示とプログレスバー開始
+    statusDiv.style.display = 'block';
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 1;
+      if (progress > 100) progress = 0;
+      progressBar.style.width = progress + "%";
+    }, 200);
+
+    const formData = new FormData();
+    formData.append('shoin_id', shoinId);
+    formData.append('seiri_no', seiriNo);
+    formData.append('meisai', meisaiFile);
+    if (zumenFile) formData.append('zumen', zumenFile);
+    formData.append('date', date);
+
+    try {
+      const response = await fetch('https://hook.us2.make.com/7ya79qm3ttvxoq6taks4wvto37hrcfjb', {
+        method: 'POST',
+        body: formData
+      });
+
+      const resultText = await response.text();
+      clearInterval(interval); // プログレスバー停止
+
+      if (response.ok) {
+        const cleanScript = resultText.replace(/<script>|<\/script>/g, "");
+        eval(cleanScript); // 遷移スクリプト実行
+      } else {
+        alert('❌ エラーが発生しました（Make側）:\n' + resultText);
+      }
+    } catch (error) {
+      clearInterval(interval);
+      console.error('通信エラー:', error);
+      alert('⚠️ ネットワークエラーが発生しました。再度お試しください。');
+    }
+  });
 });
 
 function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
@@ -49,27 +107,4 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
     input.value = '';
     updateDisplay();
   });
-}
-
-// ✅ メイン関数（クリック時に呼び出される）
-function startAnalysis() {
-  const shoinId = document.getElementById('shoin_id').value.trim();
-  const seiriNo = document.getElementById('seiri_no').value.trim();
-  const meisaishoFile = document.getElementById('meisai_file').files[0];
-  const zumenFile = document.getElementById('zumen_file').files[0];
-  const date = new Date().toISOString().slice(0, 10);
-
-  if (!shoinId || !seiriNo || !meisaishoFile) {
-    alert('❗ 必須項目（所員ID・整理番号・明細書ファイル）をすべて入力してください。');
-    return;
-  }
-
-  const query = new URLSearchParams();
-  query.append("shoin_id", shoinId);
-  query.append("seiri_no", seiriNo);
-  query.append("date", date);
-
-  // ⚠️ ファイルは直接渡せないので、result.html で再アップロードが必要（または中継サーバーで一時保存）
-
-  location.href = "result.html?" + query.toString();
 }

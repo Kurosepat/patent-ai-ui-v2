@@ -153,12 +153,16 @@
       図面は PDF 形式（OCR化推奨）をご提出ください。特に、ブロック図やフローチャート等の文字が含まれている場合は、OCR化したものでお願いします。
     </div>
 
-    <button type="button" onclick="startAnalysis()">AIチェックを開始</button>
+    <button type="submit">AIチェックを開始</button>
   </form>
 
 <div id="analysis-status" style="display: none; margin-top: 30px; font-size: 1.2rem;">
-  AI分析中です。しばらくお待ちください<span id="dots"></span>
+  AI分析中です。しばらくお待ちください...
+  <div id="progress-container" style="margin-top: 15px; width: 100%; max-width: 400px; height: 10px; background-color: #eee; border-radius: 5px; overflow: hidden;">
+    <div id="progress-bar" style="width: 0%; height: 100%; background-color: #00ffcc; transition: width 0.2s ease;"></div>
+  </div>
 </div>
+
 
   <script>
     document.getElementById("today-date").value = new Date().toISOString().split('T')[0];
@@ -201,7 +205,6 @@
         }
         updateDisplay();
       });
-
       input.addEventListener('change', updateDisplay);
       remove.addEventListener('click', () => {
         input.value = '';

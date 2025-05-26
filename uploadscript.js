@@ -1,4 +1,4 @@
-// ✅ uploadscript.js（進捗バー対応バージョン）
+// ✅ uploadscript.js（クリック修正＆進捗バー対応）
 
 window.addEventListener('DOMContentLoaded', function() {
   document.getElementById("today-date").value = new Date().toISOString().split('T')[0];
@@ -13,9 +13,8 @@ window.addEventListener('DOMContentLoaded', function() {
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
 
-// ← ここで一呼吸待ってから実行する
-  await new Promise(resolve => setTimeout(resolve, 300));  // 100ms 待機（回避策）
-    
+    await new Promise(resolve => setTimeout(resolve, 300));  // 少し待ってから実行
+
     const shoinId = document.getElementById('shoin_id').value.trim();
     const seiriNo = document.getElementById('seiri_no').value.trim();
     const meisaiFile = document.getElementById('meisai_file').files[0];
@@ -68,7 +67,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
   const zone = document.getElementById(zoneId);
-  let input = document.getElementById(inputId);  // ← こう直す！
+  const input = document.getElementById(inputId);
   const name = document.getElementById(nameId);
   const remove = document.getElementById(removeId);
   const display = document.getElementById(displayId);
@@ -85,28 +84,20 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
     }
   }
 
+  // ✅ ここを修正：cloneNodeはやめて、シンプルにクリック
   zone.addEventListener('click', () => {
-  // 🔁 inputの完全リセット（cloneNode方式）
-  const oldInput = document.getElementById(inputId);
-  const newInput = oldInput.cloneNode(true);
-  oldInput.parentNode.replaceChild(newInput, oldInput);
-
-  input = newInput;  // ✅ これを忘れずに追加！
-  newInput.addEventListener('change', updateDisplay);
-
-  // ファイル選択トリガー
-  newInput.click();
-});
-
-
+    input.click();
+  });
 
   zone.addEventListener('dragover', (e) => {
     e.preventDefault();
     zone.style.backgroundColor = '#444';
   });
+
   zone.addEventListener('dragleave', () => {
     zone.style.backgroundColor = '#333';
   });
+
   zone.addEventListener('drop', (e) => {
     e.preventDefault();
     zone.style.backgroundColor = '#333';
@@ -120,6 +111,7 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
   });
 
   input.addEventListener('change', updateDisplay);
+
   remove.addEventListener('click', () => {
     input.value = '';
     updateDisplay();

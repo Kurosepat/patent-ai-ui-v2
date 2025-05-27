@@ -1,4 +1,4 @@
-// ✅ uploadscript.js（1回目から確実に反応・全体安定化対応）
+// ✅ uploadscript.js（updateDisplayが常に最新inputを参照する完全修正版）
 
 window.addEventListener('DOMContentLoaded', function() {
   document.getElementById("today-date").value = new Date().toISOString().split('T')[0];
@@ -67,15 +67,16 @@ window.addEventListener('DOMContentLoaded', function() {
 
 function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
   const zone = document.getElementById(zoneId);
-  let input = document.getElementById(inputId); // 再代入できるように let にしておく
   const name = document.getElementById(nameId);
   const remove = document.getElementById(removeId);
   const display = document.getElementById(displayId);
   const placeholder = zone.querySelector('.placeholder');
 
+  // ✅ input は毎回最新を取得する（←今回のカギ！）
   function updateDisplay() {
-    if (input.files.length > 0) {
-      name.textContent = input.files[0].name;
+    const currentInput = document.getElementById(inputId);
+    if (currentInput.files.length > 0) {
+      name.textContent = currentInput.files[0].name;
       display.style.display = 'flex';
       placeholder.style.display = 'none';
     } else {
@@ -84,16 +85,15 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
     }
   }
 
-  // ✅ 初回 input にも必ず change イベント登録（ここが重要！）
-  input.addEventListener('change', updateDisplay);
+  // 初期の input にも change を登録
+  document.getElementById(inputId).addEventListener('change', updateDisplay);
 
-  // ✅ 初回クリック選択時も確実に発火させるよう input を毎回差し替え
   zone.addEventListener('click', () => {
-    const newInput = input.cloneNode(true);
-    input.parentNode.replaceChild(newInput, input);
-    input = newInput;
-    input.addEventListener('change', updateDisplay);
-    input.click();
+    const oldInput = document.getElementById(inputId);
+    const newInput = oldInput.cloneNode(true);
+    oldInput.parentNode.replaceChild(newInput, oldInput);
+    newInput.addEventListener('change', updateDisplay);
+    newInput.click();
   });
 
   zone.addEventListener('dragover', (e) => {
@@ -112,14 +112,16 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
     if (files.length > 0) {
       const dt = new DataTransfer();
       dt.items.add(files[0]);
-      input.files = dt.files;
-      input.dispatchEvent(new Event('change')); // 強制的に change 発火
+      const currentInput = document.getElementById(inputId);
+      currentInput.files = dt.files;
+      currentInput.dispatchEvent(new Event('change')); // 強制 change 発火
     }
     updateDisplay();
   });
 
   remove.addEventListener('click', () => {
-    input.value = '';
+    const currentInput = document.getElementById(inputId);
+    currentInput.value = '';
     updateDisplay();
   });
 }

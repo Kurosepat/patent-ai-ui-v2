@@ -1,6 +1,6 @@
-// ✅ uploadscript.js（updateDisplayが常に最新inputを参照する完全修正版）
+// ✅ uploadscript.js（再選択できない・cloneなし・動作安定）
 
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', function () {
   document.getElementById("today-date").value = new Date().toISOString().split('T')[0];
 
   setupDropZone('docxZone', 'meisai_file', 'docx-name', 'remove-docx', 'docx-display');
@@ -10,7 +10,7 @@ window.addEventListener('DOMContentLoaded', function() {
   const statusDiv = document.getElementById('analysis-status');
   const progressBar = document.getElementById('progress-bar');
 
-  form.addEventListener('submit', async function(e) {
+  form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     await new Promise(resolve => setTimeout(resolve, 300));
@@ -26,7 +26,6 @@ window.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    // ステータス表示とプログレスバー開始
     statusDiv.style.display = 'block';
     let progress = 0;
     const interval = setInterval(() => {
@@ -49,11 +48,11 @@ window.addEventListener('DOMContentLoaded', function() {
       });
 
       const resultText = await response.text();
-      clearInterval(interval); // プログレスバー停止
+      clearInterval(interval);
 
       if (response.ok) {
         const cleanScript = resultText.replace(/<script>|<\/script>/g, "");
-        eval(cleanScript); // 遷移スクリプト実行
+        eval(cleanScript);
       } else {
         alert('❌ エラーが発生しました（Make側）:\n' + resultText);
       }
@@ -67,16 +66,15 @@ window.addEventListener('DOMContentLoaded', function() {
 
 function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
   const zone = document.getElementById(zoneId);
+  const input = document.getElementById(inputId);
   const name = document.getElementById(nameId);
   const remove = document.getElementById(removeId);
   const display = document.getElementById(displayId);
   const placeholder = zone.querySelector('.placeholder');
 
-  // ✅ input は毎回最新を取得する（←今回のカギ！）
   function updateDisplay() {
-    const currentInput = document.getElementById(inputId);
-    if (currentInput.files.length > 0) {
-      name.textContent = currentInput.files[0].name;
+    if (input.files.length > 0) {
+      name.textContent = input.files[0].name;
       display.style.display = 'flex';
       placeholder.style.display = 'none';
     } else {
@@ -85,17 +83,13 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
     }
   }
 
-  // 初期の input にも change を登録
-  document.getElementById(inputId).addEventListener('change', updateDisplay);
-
+  // ✅ 再選択を防止：ファイルが既にあるならclickをブロック
   zone.addEventListener('click', () => {
-    const oldInput = document.getElementById(inputId);
-    const newInput = oldInput.cloneNode(true);
-    oldInput.parentNode.replaceChild(newInput, oldInput);
-    newInput.addEventListener('change', updateDisplay);
-    newInput.click();
+    if (input.files.length > 0) return;
+    input.click();
   });
 
+  // ✅ ドロップも1回限り（ファイルがなければ受け付ける）
   zone.addEventListener('dragover', (e) => {
     e.preventDefault();
     zone.style.backgroundColor = '#444';
@@ -108,20 +102,22 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
   zone.addEventListener('drop', (e) => {
     e.preventDefault();
     zone.style.backgroundColor = '#333';
+
+    if (input.files.length > 0) return;
     const files = e.dataTransfer.files;
     if (files.length > 0) {
       const dt = new DataTransfer();
       dt.items.add(files[0]);
-      const currentInput = document.getElementById(inputId);
-      currentInput.files = dt.files;
-      currentInput.dispatchEvent(new Event('change')); // 強制 change 発火
+      input.files = dt.files;
+      input.dispatchEvent(new Event('change'));
     }
     updateDisplay();
   });
 
+  input.addEventListener('change', updateDisplay);
+
   remove.addEventListener('click', () => {
-    const currentInput = document.getElementById(inputId);
-    currentInput.value = '';
+    input.value = '';
     updateDisplay();
   });
 }

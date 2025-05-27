@@ -1,4 +1,4 @@
-// ✅ uploadscript.js（submit内でファイル取得＋changeイベント確実対応）
+// ✅ uploadscript.js（1回目から確実に反応・全体安定化対応）
 
 window.addEventListener('DOMContentLoaded', function() {
   document.getElementById("today-date").value = new Date().toISOString().split('T')[0];
@@ -67,7 +67,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
   const zone = document.getElementById(zoneId);
-  let input = document.getElementById(inputId);
+  let input = document.getElementById(inputId); // 再代入できるように let にしておく
   const name = document.getElementById(nameId);
   const remove = document.getElementById(removeId);
   const display = document.getElementById(displayId);
@@ -84,16 +84,18 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
     }
   }
 
-  // ✅ クリック時に input を毎回作り直してイベントを確実に再設定
+  // ✅ 初回 input にも必ず change イベント登録（ここが重要！）
+  input.addEventListener('change', updateDisplay);
+
+  // ✅ 初回クリック選択時も確実に発火させるよう input を毎回差し替え
   zone.addEventListener('click', () => {
     const newInput = input.cloneNode(true);
     input.parentNode.replaceChild(newInput, input);
-    input = newInput; // 差し替えた新しい input を参照するようにする
+    input = newInput;
     input.addEventListener('change', updateDisplay);
     input.click();
   });
 
-  // ✅ ドラッグ＆ドロップ処理
   zone.addEventListener('dragover', (e) => {
     e.preventDefault();
     zone.style.backgroundColor = '#444';
@@ -111,17 +113,11 @@ function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
       const dt = new DataTransfer();
       dt.items.add(files[0]);
       input.files = dt.files;
-
-      // ✅ イベントを強制発火（UI更新の保険）
-      input.dispatchEvent(new Event('change'));
+      input.dispatchEvent(new Event('change')); // 強制的に change 発火
     }
     updateDisplay();
   });
 
-  // ✅ 初期のイベント登録
-  input.addEventListener('change', updateDisplay);
-
-  // 🗑 削除ボタン
   remove.addEventListener('click', () => {
     input.value = '';
     updateDisplay();

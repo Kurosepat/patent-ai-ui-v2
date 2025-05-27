@@ -168,53 +168,5 @@
   <script>
     document.getElementById("today-date").value = new Date().toISOString().split('T')[0];
 
-    function setupDropZone(zoneId, inputId, nameId, removeId, displayId) {
-      const zone = document.getElementById(zoneId);
-      const input = document.getElementById(inputId);
-      const name = document.getElementById(nameId);
-      const remove = document.getElementById(removeId);
-      const display = document.getElementById(displayId);
-      const placeholder = zone.querySelector('.placeholder');
-
-      function updateDisplay() {
-        if (input.files.length > 0) {
-          name.textContent = input.files[0].name;
-          display.style.display = 'flex';
-          placeholder.style.display = 'none';
-        } else {
-          display.style.display = 'none';
-          placeholder.style.display = 'block';
-        }
-      }
-
-      zone.addEventListener('click', () => input.click());
-      zone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        zone.style.backgroundColor = '#444';
-      });
-      zone.addEventListener('dragleave', () => {
-        zone.style.backgroundColor = '#333';
-      });
-      zone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        zone.style.backgroundColor = '#333';
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-          const dt = new DataTransfer();
-          dt.items.add(files[0]);
-          input.files = dt.files;
-        }
-        updateDisplay();
-      });
-      input.addEventListener('change', updateDisplay);
-      remove.addEventListener('click', () => {
-        input.value = '';
-        updateDisplay();
-      });
-    }
-
-    setupDropZone('docxZone', 'meisai_file', 'docx-name', 'remove-docx', 'docx-display');
-    setupDropZone('pdfZone', 'zumen_file', 'pdf-name', 'remove-pdf', 'pdf-display');
-  </script>
 </body>
 </html>
